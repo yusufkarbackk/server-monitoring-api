@@ -40,7 +40,7 @@ async function getFirebaseConfig() {
 
     const client = new SecretManagerServiceClient();
     const [version] = await client.accessSecretVersion({
-        name: `projects/${projectId}/secrets/firebase-config/versions/latest`,
+        name: `projects/${projectId}/secrets/firebaseConfig/versions/latest`,
     });
 
     return JSON.parse(version.payload.data.toString());
