@@ -12,13 +12,15 @@ app.get("/", (request, response) => {
     response.send("hello api")
 })
 
+
+
 app.post("/write", async (request, response) => {
     try {
         const { suhu, kelembaban, tegangan } = request.body
         const encryptedSuhu = encrypt(String(suhu))
         const encryptedKelembaban = encrypt(String(kelembaban))
         const encryptedTegangan = encrypt(String(tegangan))
-
+        
         const db = database
 
         await push(ref(db, 'sensorData'), {
