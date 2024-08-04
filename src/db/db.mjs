@@ -36,6 +36,7 @@ async function getFirebaseConfig() {
         const [version] = await client.accessSecretVersion({
             name: `projects/${projectId}/secrets/firebaseConfig/versions/latest`,
         });
+        console.log(version)
 
         return JSON.parse(version.payload.data.toString());
     }
