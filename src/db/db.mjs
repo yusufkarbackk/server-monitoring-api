@@ -16,7 +16,8 @@ async function getProjectId() {
 
 async function getFirebaseConfig() {
     if (process.env.NODE_ENV !== 'production') {
-        return {
+        console.log("dev values")
+        const devFirebaseConfig = {
             apiKey: process.env.API_KEY,
             authDomain: process.env.AUTH_DOMAIN,
             projectId: process.env.PROJECT_ID,
@@ -25,16 +26,19 @@ async function getFirebaseConfig() {
             appId: process.env.APP_ID,
             databaseURL: `https://${process.env.PROJECT_ID}-default-rtdb.asia-southeast1.firebasedatabase.app/`
         };
+        return devFirebaseConfig
     }
+    else {
+        console.log("prod values")
+        const projectId = await getProjectId()
+        console.log(projectId)
+        const client = new SecretManagerServiceClient();
+        const [version] = await client.accessSecretVersion({
+            name: `projects/${projectId}/secrets/firebaseConfig/versions/latest`,
+        });
 
-    const projectId = await getProjectId()
-
-    const client = new SecretManagerServiceClient();
-    const [version] = await client.accessSecretVersion({
-        name: `projects/${projectId}/secrets/firebaseConfig/versions/latest`,
-    });
-
-    return JSON.parse(version.payload.data.toString());
+        return JSON.parse(version.payload.data.toString());
+    }
 }
 
 const firebaseConfig = {
@@ -48,6 +52,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(getFirebaseConfig());
+console.log(getFirebaseConfig())
+const app = initializeApp(await getFirebaseConfig());
+console.log(app)
 const database = getDatabase(app)
 export default database
