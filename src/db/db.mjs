@@ -8,20 +8,11 @@ dotenv.config()
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-async function getSecret(secretName) {
-    const [version] = await secretManager.accessSecretVersion({
-        name: `projects/YOUR_PROJECT_ID/secrets/${secretName}/versions/latest`,
-    });
-    return version.payload.data.toString('utf8');
-}
-
 async function getProjectId() {
     const client = new SecretManagerServiceClient();
     const [projectId] = await client.getProjectId();
     return projectId;
 }
-
 
 async function getFirebaseConfig() {
     if (process.env.NODE_ENV !== 'production') {
